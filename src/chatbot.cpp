@@ -35,7 +35,7 @@ ChatBot::~ChatBot()
     std::cout << "ChatBot Destructor" << std::endl;
 
     // deallocate heap memory
-    if(_image != NULL) // Attention: wxWidgets used NULL and not nullptr
+    if(_image != NULL || _image != nullptr) // Attention: wxWidgets used NULL and not nullptr
     {
         delete _image;
         _image = NULL;
@@ -51,7 +51,7 @@ ChatBot::ChatBot(ChatBot const &source)
    _chatLogic = source._chatLogic;
    _currentNode = source._currentNode;
    _rootNode = source._rootNode;
-   _image = source._image;
+   _image = new wxBitmap(*source._image);
    
 }
 
@@ -65,14 +65,11 @@ ChatBot::operator=(ChatBot const &source)
     }
     
     delete _image;
-    delete _chatLogic;
-    delete _rootNode;
-    delete _currentNode;
-
+    
    _chatLogic = source._chatLogic;
    _currentNode = source._currentNode;
    _rootNode = source._rootNode;
-   _image = source._image;
+   _image = new wxBitmap(*source._image);
 
 
    return *this;
@@ -81,39 +78,59 @@ ChatBot::operator=(ChatBot const &source)
 
 ChatBot::ChatBot(ChatBot &&source)
 {
+    std::cout<<"Move constructor"<<std::endl;
 
+/*
     delete _image;
     delete _rootNode;
     delete _currentNode;
     delete _chatLogic;
-
+*/
     _image = source._image;
     _rootNode = source._rootNode;
     _currentNode = source._currentNode;
     _chatLogic = source._chatLogic;
+    
+    //neds to set the correct Chatbot, what handles with app
+    _chatLogic->SetChatbotHandle(this);
+    
+    source._image = NULL; //wxwidget uses NULL
+    source._rootNode = nullptr;
+    source._currentNode = nullptr;
+    source._chatLogic = nullptr;
 
 }
 
 ChatBot &
 ChatBot::operator=(ChatBot &&source)
 {
+    std::cout<<"Move Assignment"<<std::endl;
 
     if (&source == this) {
         return *this;
     }
 
+
     delete _image;
-    delete _rootNode;
+/*    delete _rootNode;
     delete _currentNode;
     delete _chatLogic;
-
+*/
     _image = source._image;
     _rootNode = source._rootNode;
     _currentNode = source._currentNode;
     _chatLogic = source._chatLogic;
+    
+    //neds to set the correct Chatbot, what handles with app
+    _chatLogic->SetChatbotHandle(this);
+
+    source._image = NULL; //wxwidget uses NULL
+    source._rootNode = nullptr;
+    source._currentNode = nullptr;
+    source._chatLogic = nullptr;
+
 
     return *this;
-
 }
 
 
