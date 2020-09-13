@@ -52,7 +52,8 @@ ChatBot::ChatBot(ChatBot const &source)
    _currentNode = source._currentNode;
    _rootNode = source._rootNode;
    _image = new wxBitmap(*source._image);
-   
+   //neds to set the correct Chatbot, what handles with app
+   _chatLogic->SetChatbotHandle(this);
 }
 
 ChatBot &
@@ -63,14 +64,16 @@ ChatBot::operator=(ChatBot const &source)
     if (this == &source) {
         return *this;
     }
-    
-    delete _image;
+    if (_image != NULL || _image != nullptr) {
+        delete _image;
+    }
     
    _chatLogic = source._chatLogic;
    _currentNode = source._currentNode;
    _rootNode = source._rootNode;
    _image = new wxBitmap(*source._image);
-
+   //neds to set the correct Chatbot, what handles with app
+   _chatLogic->SetChatbotHandle(this);
 
    return *this;
    
